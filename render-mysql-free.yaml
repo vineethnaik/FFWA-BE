@@ -1,8 +1,9 @@
+# Alternative: Use external free MySQL hosting (PlanetScale, Railway, etc.)
 services:
   - type: web
     name: agrizen-backend
     runtime: docker
-    plan: starter
+    plan: free
     region: singapore
     branch: main
     buildCommand: mvn clean package -DskipTests
@@ -11,18 +12,13 @@ services:
     envVars:
       - key: PORT
         value: 8080
+      # Use external MySQL database (PlanetScale, Railway, etc.)
       - key: SPRING_DATASOURCE_URL
-        fromDatabase:
-          name: agrizen-mysql
-          property: connectionString
+        value: ${EXTERNAL_MYSQL_URL}
       - key: SPRING_DATASOURCE_USERNAME
-        fromDatabase:
-          name: agrizen-mysql
-          property: user
+        value: ${EXTERNAL_MYSQL_USERNAME}
       - key: SPRING_DATASOURCE_PASSWORD
-        fromDatabase:
-          name: agrizen-mysql
-          property: password
+        value: ${EXTERNAL_MYSQL_PASSWORD}
       - key: SPRING_JPA_HIBERNATE_DDL_AUTO
         value: update
       - key: SPRING_JPA_SHOW_SQL
@@ -36,9 +32,4 @@ services:
       - key: APP_UPLOAD_BASE_URL
         value: /uploads
 
-databases:
-  - name: agrizen-mysql
-    databaseName: agrigrow
-    user: agrizen_user
-    plan: starter
-    region: singapore
+# No database section - using external MySQL
